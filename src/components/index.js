@@ -1,6 +1,8 @@
-import { initialCards, deleteCard, createCard }  from './cards.js'; 
+import { deleteCard, createCard }  from './card.js'; 
 import { openModal, closeModal, setupPopupClose} from './modal.js'; 
+import { initialCards }  from './cards.js'; 
 import '../pages/index.css'; 
+
 
 // Получение элементов управления
 const openEditButton = document.querySelector('.profile__edit-button'); 
