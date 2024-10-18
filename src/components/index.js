@@ -7,7 +7,7 @@ import '../pages/index.css';
 // Получение элементов управления
 const openEditButton = document.querySelector('.profile__edit-button'); 
 const openNewCardButton = document.querySelector('.profile__add-button'); 
-const popupEdit = document.querySelector('.popup_type_edit'); 
+const profileForm = document.querySelector('.popup_type_edit'); 
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupImage = document.querySelector('.popup_type_image'); 
 
@@ -82,12 +82,12 @@ placesList.addEventListener('click', (evt) => {
 });
 
 // Настройка закрытия кнопок и оверлеев для модальных окон
-setupPopupClose(popupEdit);
+setupPopupClose(profileForm);
 setupPopupClose(popupNewCard);
 setupPopupClose(popupImage);
 
 // Добавляем обработчики событий для кнопок открытия модальных окон
-openEditButton.addEventListener('click', () => openModal(popupEdit));
+openEditButton.addEventListener('click', () => openModal(profileForm));
 openNewCardButton.addEventListener('click', () => openModal(popupNewCard));
 
 

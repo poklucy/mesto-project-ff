@@ -10,17 +10,20 @@ function openModal(popup) {
   }
 }
 
+
+
+// Функция для закрытия модального окна
 function closeModal(popup) {
   if (popup) {
-    popup.style.opacity = 0; 
-    popup.classList.remove("popup_is-opened");
+    // Устанавливаем анимацию закрытия
+    popup.style.opacity = 0;
+    popup.style.pointerEvents = 'none'; // отключаем событие щелчка
+    popup.classList.add("popup_is-animated");
 
-    setTimeout(() => {
-      popup.style.pointerEvents = 'none'; 
-    }, 600); 
     document.removeEventListener("keydown", handleEscClose);
   }
 }
+
 
 function handleEscClose(evt) {
   if (evt.key === "Escape") {
