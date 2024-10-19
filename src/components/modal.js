@@ -1,36 +1,35 @@
 function openModal(popup) {
-  if (popup) {
-    popup.style.opacity = 0; 
-    popup.classList.add("popup_is-opened");
+  popup.classList.add("popup_is-opened");
+  window.addEventListener('keydown', EscClose);
 
-    setTimeout(() => {
-      popup.style.opacity = 1; 
-    }, 50); 
-    document.addEventListener("keydown", handleEscClose);
+  const popupEdit = document.querySelector('.popup_type_edit');
+  const nameInput = popupEdit.querySelector('.popup__input_type_name');
+  const jobInput = popupEdit.querySelector('.popup__input_type_description');
+  const profileTitle = document.querySelector('.profile__title');
+  const profileDescription = document.querySelector('.profile__description');
+
+  if (popup.classList.contains('popup_type_edit')) {
+    nameInput.value = profileTitle.textContent; 
+    jobInput.value = profileDescription.textContent; 
   }
+
+  popup.classList.add('popup');
 }
 
 
-
-// Функция для закрытия модального окна
+// функция закрытия модального окна + вызов функции очистки форм
 function closeModal(popup) {
-  if (popup) {
-    // Устанавливаем анимацию закрытия
-    popup.style.opacity = 0;
-    popup.style.pointerEvents = 'none'; // отключаем событие щелчка
-    popup.classList.add("popup_is-animated");
-
-    document.removeEventListener("keydown", handleEscClose);
-  }
+  popup.classList.remove("popup_is-opened");
+  window.removeEventListener('keydown', EscClose);
 }
 
 
-function handleEscClose(evt) {
-  if (evt.key === "Escape") {
-    const popupOpened = document.querySelector(".popup_is-opened");
-    if (popupOpened) {
-      closeModal(popupOpened);
-    }
+function EscClose(evt) {
+  if(evt.key) {
+    if(evt.key.toLowerCase() === "escape") {
+      const popup = document.querySelector('.popup_is-opened');
+      closeModal(popup);
+    }  
   }
 }
 

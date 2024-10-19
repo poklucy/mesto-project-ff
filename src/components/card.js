@@ -1,25 +1,22 @@
+function createCard(data, openImageModal) { 
+  const cardTemplate = document.getElementById("card-template").content.cloneNode(true).querySelector(".card");
+  const cardTitle = cardTemplate.querySelector(".card__title");
+  const cardImage = cardTemplate.querySelector(".card__image");
+  const deleteButton = cardTemplate.querySelector(".card__delete-button");
+  const likeButton = cardTemplate.querySelector(".card__like-button");
 
-function createCard(data, deleteCardCallback) {
-  const cardTemplate = document.getElementById("card-template").content;
-  const cardElement = cardTemplate.cloneNode(true).querySelector(".card");
-
-  const cardTitle = cardElement.querySelector(".card__title");
-  const cardImage = cardElement.querySelector(".card__image");
-  const deleteButton = cardElement.querySelector(".card__delete-button");
-  const likeButton = cardElement.querySelector(".card__like-button");
-
-  cardTitle.textContent = data.name;
   cardImage.src = data.link;
   cardImage.alt = data.name;
+  cardTitle.textContent = data.name;
 
-  // Установить состояние лайка
   if (data.liked) {
-    likeButton.classList.add("card__like-button_is-active");
-}
+      likeButton.classList.add("card__like-button_is-active");
+  }
 
-deleteButton.addEventListener("click", () => {
-    deleteCardCallback(cardElement);
+  deleteButton.addEventListener('click', () => {
+      cardTemplate.remove();
   });
+
 
   cardImage.addEventListener("click", () => {
       openImageModal(data.link, data.name);
@@ -29,7 +26,7 @@ deleteButton.addEventListener("click", () => {
       likeButton.classList.toggle("card__like-button_is-active");
   });
 
-  return cardElement;
+  return cardTemplate;
 }
 
 // Функция для удаления карточки
@@ -40,7 +37,5 @@ function deleteCard(cardElement) {
       console.error("Неверный элемент для удаления:", cardElement);
   }
 }
-
-
 
 export {createCard, deleteCard};
