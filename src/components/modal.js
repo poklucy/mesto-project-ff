@@ -1,30 +1,26 @@
-function openModal(popup) {
-  popup.classList.add("popup_is-opened");
-  window.addEventListener('keydown', EscClose);
 
-  const popupEdit = document.querySelector('.popup_type_edit');
-  const nameInput = popupEdit.querySelector('.popup__input_type_name');
-  const jobInput = popupEdit.querySelector('.popup__input_type_description');
-  const profileTitle = document.querySelector('.profile__title');
-  const profileDescription = document.querySelector('.profile__description');
 
-  if (popup.classList.contains('popup_type_edit')) {
-    nameInput.value = profileTitle.textContent; 
-    jobInput.value = profileDescription.textContent; 
-  }
+function openModal(modal) {
+  modal.classList.add("popup_is-animated");
 
-  popup.classList.add('popup');
+  setTimeout(function () {
+    modal.classList.add("popup_is-opened");
+  }, 1); 
+
+  document.addEventListener("keydown", escClose);
+  modal
+    .querySelector(".popup__close")
+    .addEventListener("click", escClose);
 }
-
 
 // функция закрытия модального окна + вызов функции очистки форм
 function closeModal(popup) {
   popup.classList.remove("popup_is-opened");
-  window.removeEventListener('keydown', EscClose);
+  window.removeEventListener('keydown', escClose);
 }
 
 
-function EscClose(evt) {
+function escClose(evt) {
   if(evt.key) {
     if(evt.key.toLowerCase() === "escape") {
       const popup = document.querySelector('.popup_is-opened');
@@ -33,25 +29,4 @@ function EscClose(evt) {
   }
 }
 
-function setupPopupClose(popup) {
-  if (!popup) return;
-
-  const closeButton = popup.querySelector(".popup__close");
-
-  if (closeButton) {
-    closeButton.addEventListener("click", () => {
-      closeModal(popup);
-    });
-  }
-
-  popup.addEventListener("click", (evt) => {
-    if (evt.target === popup) {
-      closeModal(popup);
-    }
-  });
-}
-
-const popups = document.querySelectorAll('.popup');
-popups.forEach(setupPopupClose);
-
-export  { openModal, closeModal, setupPopupClose};
+export  {openModal, closeModal};

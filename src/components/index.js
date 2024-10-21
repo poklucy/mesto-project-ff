@@ -1,5 +1,5 @@
 import { deleteCard, createCard } from './card.js';
-import { openModal, closeModal, setupPopupClose } from './modal.js'; 
+import { openModal, closeModal } from './modal.js'; 
 import { initialCards } from './cards.js'; 
 import '../pages/index.css'; 
 
@@ -11,8 +11,7 @@ const popupCard = document.querySelector('.popup_type_new-card');
 const popupImage = document.querySelector('.popup_type_image'); 
 
 // Находим модальное окно и элементы на странице
-const closeButton = popupEdit.querySelector('.popup__close');
-const formElement = popupEdit.querySelector('.popup__form');
+const profileForm = popupEdit.querySelector('.popup__form');
 const nameInput = popupEdit.querySelector('.popup__input_type_name');
 const jobInput = popupEdit.querySelector('.popup__input_type_description');
 const profileTitle = document.querySelector('.profile__title');
@@ -35,27 +34,23 @@ function renderCards(cards) {
 // Рендерим карточки при загрузке страницы
 renderCards(initialCards);
 
-// Функция для открытия модального окна с изображением
-function openImageModal(link, name) {
-  const imageElement = popupImage.querySelector('.popup__image');
-  const captionElement = popupImage.querySelector('.popup__caption');
+function setupPopupClose(popup) {
+  if (!popup) return;
 
-  imageElement.src = link;
-  imageElement.alt = name;
-  captionElement.textContent = name;
+  const profileCloseButton = popup.querySelector(".popup__close");
 
-  openModal(popupImage);
-}
-
-// Обработчик клика на карточки
-placesList.addEventListener('click', (evt) => {
-  const cardImage = evt.target.closest('.card__image'); 
-  if (cardImage) {
-    const link = cardImage.src;
-    const name = cardImage.alt;
-    openImageModal(link, name);
+  if (profileCloseButton) {
+      profileCloseButton.addEventListener("click", () => {
+          closeModal(popup);
+      });
   }
-});
+
+  popup.addEventListener("click", (evt) => {
+      if (evt.target === popup) {
+          closeModal(popup);
+      }
+  });
+}
 
 // Настройка закрытия кнопок и оверлеев для модальных окон
 setupPopupClose(popupEdit);
@@ -83,7 +78,7 @@ function handleFormSubmit(evt) {
 }
 
 // Прикрепляем обработчик к форме редактирования
-formElement.addEventListener('submit', handleFormSubmit);
+profileForm.addEventListener('submit', handleFormSubmit);
 
 // Обработчик формы отправки новой карточки
 function handleNewCardSubmit(evt) {
@@ -102,3 +97,6 @@ function handleNewCardSubmit(evt) {
 
 // Прикрепляем обработчик к форме для события “submit”
 formNewCard.addEventListener('submit', handleNewCardSubmit);
+
+const popups = document.querySelectorAll('.popup');
+popups.forEach(popup => setupPopupClose(popup));

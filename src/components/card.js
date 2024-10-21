@@ -1,41 +1,56 @@
-function createCard(data, openImageModal) { 
-  const cardTemplate = document.getElementById("card-template").content.cloneNode(true).querySelector(".card");
-  const cardTitle = cardTemplate.querySelector(".card__title");
-  const cardImage = cardTemplate.querySelector(".card__image");
-  const deleteButton = cardTemplate.querySelector(".card__delete-button");
-  const likeButton = cardTemplate.querySelector(".card__like-button");
+import { openModal } from './modal.js'; 
 
-  cardImage.src = data.link;
-  cardImage.alt = data.name;
-  cardTitle.textContent = data.name;
+function createCard(data) {
+    const cardTemplate = document.getElementById("card-template").content.cloneNode(true).querySelector(".card");
+    const cardTitle = cardTemplate.querySelector(".card__title");
+    const cardImage = cardTemplate.querySelector(".card__image");
+    const deleteButton = cardTemplate.querySelector(".card__delete-button");
+    const likeButton = cardTemplate.querySelector(".card__like-button");
 
-  if (data.liked) {
-      likeButton.classList.add("card__like-button_is-active");
-  }
+    cardImage.src = data.link;
+    cardImage.alt = data.name;
+    cardTitle.textContent = data.name;
 
-  deleteButton.addEventListener('click', () => {
-      cardTemplate.remove();
-  });
+    // Устанавливаем статус лайка
+    if (data.liked) {
+        likeButton.classList.add("card__like-button_is-active");
+    }
 
+    // Обработчик удаления карточки
+    deleteButton.addEventListener('click', () => {
+        deleteCard(cardTemplate);
+    });
 
-  cardImage.addEventListener("click", () => {
-      openImageModal(data.link, data.name);
-  });
+    // Обработчик клика по изображению для открытия модального окна
+    cardImage.addEventListener("click", () => {
+        // Открытие модального окна внутри функции
+        const popupImage = document.querySelector('.popup_type_image');
+        const imageElement = popupImage.querySelector('.popup__image');
+        const captionElement = popupImage.querySelector('.popup__caption');
 
-  likeButton.addEventListener("click", () => {
-      likeButton.classList.toggle("card__like-button_is-active");
-  });
+        imageElement.src = data.link;
+        imageElement.alt = data.name;
+        captionElement.textContent = data.name;
 
-  return cardTemplate;
+        openModal(popupImage);
+    });
+
+    // Обработчик клика по кнопке лайка
+    likeButton.addEventListener("click", () => {
+        likeButton.classList.toggle("card__like-button_is-active");
+    });
+
+    return cardTemplate;
 }
 
-// Функция для удаления карточки
-function deleteCard(cardElement) {
-  if (cardElement && cardElement instanceof HTMLElement) {
-      cardElement.remove();
-  } else {
-      console.error("Неверный элемент для удаления:", cardElement);
-  }
-}
 
-export {createCard, deleteCard};
+  // Функция для удаления карточки
+  function deleteCard(cardElement) {
+    if (cardElement && cardElement instanceof HTMLElement) {
+        cardElement.remove();
+    } else {
+        console.error("Неверный элемент для удаления:", cardElement);
+    }
+  }
+
+  export {createCard, deleteCard};
