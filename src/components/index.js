@@ -1,4 +1,4 @@
-import { deleteCard, createCard } from './card.js';
+import { deleteCard } from './card.js';
 import { openModal, closeModal } from './modal.js'; 
 import { initialCards } from './cards.js'; 
 import '../pages/index.css'; 
@@ -33,6 +33,50 @@ function renderCards(cards) {
 
 // Рендерим карточки при загрузке страницы
 renderCards(initialCards);
+
+function createCard(data) {
+  const cardTemplate = document.getElementById("card-template").content.cloneNode(true).querySelector(".card");
+  const deleteButton = cardTemplate.querySelector(".card__delete-button");
+  const likeButton = cardTemplate.querySelector(".card__like-button");
+  const cardImage = cardTemplate.querySelector(".card__image");
+
+  // Устанавливаем изображение и описание из данных
+  cardImage.src = data.link;
+  cardImage.alt = data.name;
+  cardTemplate.querySelector(".card__title").textContent = data.name;
+
+  // Устанавливаем статус лайка
+  if (data.liked) {
+      likeButton.classList.add("card__like-button_is-active");
+  }
+
+  // Обработчик удаления карточки
+  deleteButton.addEventListener('click', () => {
+      deleteCard(cardTemplate);
+  });
+
+  // Обработчик клика по кнопке лайка
+  likeButton.addEventListener("click", () => {
+      likeButton.classList.toggle("card__like-button_is-active");
+  });
+
+  // Обработчик клика по изображению для открытия модального окна
+  cardImage.addEventListener("click", () => {
+      // Открытие модального окна с изображением
+      const popupImage = document.querySelector('.popup_type_image');
+      const imageElement = popupImage.querySelector('.popup__image');
+      const captionElement = popupImage.querySelector('.popup__caption');
+
+      imageElement.src = data.link;
+      imageElement.alt = data.name;
+      captionElement.textContent = data.name;
+
+      openModal(popupImage);
+  });
+
+  return cardTemplate;
+}
+
 
 function setupPopupClose(popup) {
   if (!popup) return;
