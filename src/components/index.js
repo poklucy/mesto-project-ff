@@ -8,7 +8,6 @@ const openEditButton = document.querySelector('.profile__edit-button');
 const openNewCardButton = document.querySelector('.profile__add-button'); 
 const popupEdit = document.querySelector('.popup_type_edit'); 
 const popupCard = document.querySelector('.popup_type_new-card');
-const popupImage = document.querySelector('.popup_type_image'); 
 
 // Находим модальное окно и элементы на странице
 const profileForm = popupEdit.querySelector('.popup__form');
@@ -22,6 +21,7 @@ const formNewCard = popupCard.querySelector('.popup__form');
 const titleInput = popupCard.querySelector('.popup__input_type_card-name');
 const linkInput = popupCard.querySelector('.popup__input_type_url');
 const placesList = document.querySelector('.places__list');
+
 
 // Функция для вывода всех карточек на страницу
 function renderCards(cards) {
@@ -55,14 +55,17 @@ function setupPopupClose(popup) {
 // Настройка закрытия кнопок и оверлеев для модальных окон
 setupPopupClose(popupEdit);
 setupPopupClose(popupCard);
-setupPopupClose(popupImage);
 
 // Добавляем обработчики событий для кнопок открытия модальных окон
-openEditButton.addEventListener('click', () => openModal(popupEdit));
+openEditButton.addEventListener('click', () => {
+  nameInput.value = profileTitle.textContent;  
+  jobInput.value = profileDescription.textContent;  
+  openModal(popupEdit)
+});
 openNewCardButton.addEventListener('click', () => openModal(popupCard));
 
 // Обработчик «отправки» формы редактирования профиля
-function handleFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   // Получаем значения полей
@@ -75,10 +78,12 @@ function handleFormSubmit(evt) {
 
   // Закрываем попап
   closeModal(popupEdit);
+
 }
 
+
 // Прикрепляем обработчик к форме редактирования
-profileForm.addEventListener('submit', handleFormSubmit);
+profileForm.addEventListener('submit', handleProfileFormSubmit);
 
 // Обработчик формы отправки новой карточки
 function handleNewCardSubmit(evt) {

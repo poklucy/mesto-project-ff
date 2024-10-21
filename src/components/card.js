@@ -1,15 +1,13 @@
-import { openModal } from './modal.js'; 
-
 function createCard(data) {
     const cardTemplate = document.getElementById("card-template").content.cloneNode(true).querySelector(".card");
-    const cardTitle = cardTemplate.querySelector(".card__title");
-    const cardImage = cardTemplate.querySelector(".card__image");
     const deleteButton = cardTemplate.querySelector(".card__delete-button");
     const likeButton = cardTemplate.querySelector(".card__like-button");
+    const cardImage = cardTemplate.querySelector(".card__image");
 
+    // Устанавливаем изображение и описание из данных
     cardImage.src = data.link;
     cardImage.alt = data.name;
-    cardTitle.textContent = data.name;
+    cardTemplate.querySelector(".card__title").textContent = data.name;
 
     // Устанавливаем статус лайка
     if (data.liked) {
@@ -21,9 +19,14 @@ function createCard(data) {
         deleteCard(cardTemplate);
     });
 
+    // Обработчик клика по кнопке лайка
+    likeButton.addEventListener("click", () => {
+        likeButton.classList.toggle("card__like-button_is-active");
+    });
+
     // Обработчик клика по изображению для открытия модального окна
     cardImage.addEventListener("click", () => {
-        // Открытие модального окна внутри функции
+        // Открытие модального окна с изображением
         const popupImage = document.querySelector('.popup_type_image');
         const imageElement = popupImage.querySelector('.popup__image');
         const captionElement = popupImage.querySelector('.popup__caption');
@@ -35,15 +38,17 @@ function createCard(data) {
         openModal(popupImage);
     });
 
-    // Обработчик клика по кнопке лайка
-    likeButton.addEventListener("click", () => {
-        likeButton.classList.toggle("card__like-button_is-active");
-    });
-
     return cardTemplate;
 }
 
+function openModal(popup) {
+    popup.classList.add("popup_is-animated");
 
+    setTimeout(function () {
+        popup.classList.add("popup_is-opened");
+    }, 1); 
+}
+  
   // Функция для удаления карточки
   function deleteCard(cardElement) {
     if (cardElement && cardElement instanceof HTMLElement) {

@@ -1,5 +1,3 @@
-
-
 function openModal(modal) {
   modal.classList.add("popup_is-animated");
 
@@ -16,7 +14,6 @@ function openModal(modal) {
 // функция закрытия модального окна + вызов функции очистки форм
 function closeModal(popup) {
   popup.classList.remove("popup_is-opened");
-  window.removeEventListener('keydown', escClose);
 }
 
 
