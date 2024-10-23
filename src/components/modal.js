@@ -3,7 +3,7 @@ function openModal(modal) {
 
   setTimeout(function () {
     modal.classList.add("popup_is-opened");
-  }, 1); 
+  }, 1);
 
   document.addEventListener("keydown", escClose);
   modal
@@ -11,19 +11,17 @@ function openModal(modal) {
     .addEventListener("click", escClose);
 }
 
-// функция закрытия модального окна + вызов функции очистки форм
 function closeModal(popup) {
   popup.classList.remove("popup_is-opened");
 }
 
-
 function escClose(evt) {
-  if(evt.key) {
-    if(evt.key.toLowerCase() === "escape") {
+  if (evt.key) {
+    if (evt.key.toLowerCase() === "escape") {
       const popup = document.querySelector('.popup_is-opened');
       closeModal(popup);
-    }  
+    }
   }
 }
 
-export  {openModal, closeModal};
+export { openModal, closeModal };
