@@ -1,26 +1,31 @@
-function openModal(modal) {
-  modal.classList.add("popup_is-animated");
+// Функция для открытия модального окна
+function openModal(popup) {
+  popup.classList.add("popup_is-animated");
 
   setTimeout(function () {
-    modal.classList.add("popup_is-opened");
+    popup.classList.add("popup_is-opened");
   }, 1);
 
-  document.addEventListener("keydown", escClose);
-  modal
-    .querySelector(".popup__close")
-    .addEventListener("click", escClose);
+  document.addEventListener("keydown", handleEscClose);
+  setupCloseOnClick(popup);
 }
 
 function closeModal(popup) {
   popup.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", handleEscClose);
 }
 
-function escClose(evt) {
-  if (evt.key) {
-    if (evt.key.toLowerCase() === "escape") {
-      const popup = document.querySelector('.popup_is-opened');
-      closeModal(popup);
-    }
+function handleEscClose(evt) {
+  if (evt.key && evt.key.toLowerCase() === "escape") {
+    const openedPopup = document.querySelector('.popup_is-opened');
+    if (openedPopup) closeModal(openedPopup);
+  }
+}
+
+function setupCloseOnClick(popup) {
+  const closeButton = popup.querySelector(".popup__close");
+  if (closeButton) {
+    closeButton.addEventListener("click", () => closeModal(popup));
   }
 }
 
