@@ -1,4 +1,4 @@
-import { createCard } from './card.js';
+import { createCard, deleteCard } from './card.js';
 import { openModal, closeModal } from './modal.js';
 import { initialCards } from './cards.js';
 import '../pages/index.css';
@@ -12,7 +12,7 @@ const nameInput = popupEdit.querySelector('.popup__input_type_name');
 const jobInput = popupEdit.querySelector('.popup__input_type_description');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
-const formNewCard = popupCard.querySelector('.popup__form')
+const formNewCard = popupCard.querySelector('.popup__form');
 const titleInput = popupCard.querySelector('.popup__input_type_card-name');
 const linkInput = popupCard.querySelector('.popup__input_type_url');
 const placesList = document.querySelector('.places__list');
@@ -21,24 +21,21 @@ const popups = document.querySelectorAll('.popup');
 
 function renderCards(cards) {
   cards.forEach(cardData => {
-    const cardElement = createCard(cardData);
+    const cardElement = createCard(cardData, deleteCard);
     placesList.appendChild(cardElement);
   });
 }
 
 function setupPopupClose(popup) {
   if (!popup) return;
+
   const closeButton = popup.querySelector(".popup__close");
   if (closeButton) {
     closeButton.addEventListener("click", () => closeModal(popup));
   }
+
   popup.addEventListener("click", (evt) => {
     if (evt.target === popup) {
-      closeModal(popup);
-    }
-  });
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
       closeModal(popup);
     }
   });
@@ -67,6 +64,7 @@ function setUpEventListeners() {
   });
 
   openNewCardButton.addEventListener('click', () => openModal(popupCard));
+
 
   formNewCard.addEventListener('submit', handleNewCardSubmit);
   profileForm.addEventListener('submit', handleProfileFormSubmit);
