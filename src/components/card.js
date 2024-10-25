@@ -17,7 +17,8 @@ function createCard(data) {
   });
 
   cardImage.addEventListener("click", () => {
-    openImagePopup(data.link, data.name);
+    const event = new CustomEvent('openPopup', { detail: { link: data.link, name: data.name } });
+    document.dispatchEvent(event);
   });
 
   likeButton.addEventListener("click", () => {
@@ -26,33 +27,6 @@ function createCard(data) {
 
   return cardTemplate;
 }
-
-function openImagePopup(imageSrc, imageAlt) {
-  const popup = document.querySelector('.popup_type_image');
-  const popupImage = popup.querySelector('.popup__image');
-  const popupCaption = popup.querySelector('.popup__caption');
-
-  popupImage.src = imageSrc;
-  popupImage.alt = imageAlt;
-
-  popupCaption.textContent = imageAlt;
-  popup.classList.add("popup_is-animated");
-
-  setTimeout(function () {
-    popup.classList.add("popup_is-opened");
-  }, 1);
-
-  function closePopupOnEsc(event) {
-    if (event.key === "Escape") {
-      popup.classList.remove("popup_is-opened");
-      document.removeEventListener("keydown", closePopupOnEsc);
-    }
-  }
-
-  document.addEventListener("keydown", closePopupOnEsc);
-}
-
-
 
 function deleteCard(cardElement) {
   if (cardElement && cardElement instanceof HTMLElement) {

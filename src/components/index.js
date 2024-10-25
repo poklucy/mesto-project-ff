@@ -17,6 +17,9 @@ const titleInput = popupCard.querySelector('.popup__input_type_card-name');
 const linkInput = popupCard.querySelector('.popup__input_type_url');
 const placesList = document.querySelector('.places__list');
 const popups = document.querySelectorAll('.popup');
+const popup = document.querySelector('.popup_type_image');
+const popupImage = popup.querySelector('.popup__image');
+const popupCaption = popup.querySelector('.popup__caption');
 
 
 function renderCards(cards) {
@@ -25,6 +28,19 @@ function renderCards(cards) {
     placesList.appendChild(cardElement);
   });
 }
+
+function openImagePopup(imageSrc, imageAlt) {
+  popupImage.src = imageSrc;
+  popupImage.alt = imageAlt;
+
+  popupCaption.textContent = imageAlt;
+  openModal(popup);
+}
+
+document.addEventListener('openPopup', (event) => {
+  const { link, name } = event.detail;
+  openImagePopup(link, name);
+});
 
 function setupPopupClose(popup) {
   if (!popup) return;
