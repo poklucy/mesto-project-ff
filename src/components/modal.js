@@ -1,5 +1,5 @@
-// Функция для открытия модального окна
 function openModal(popup) {
+  const event = new Event('clearErrors');
   popup.classList.add("popup_is-animated");
 
   setTimeout(function () {
@@ -7,6 +7,7 @@ function openModal(popup) {
   }, 1);
 
   document.addEventListener("keydown", handleEscClose);
+  document.dispatchEvent(event);
 }
 
 function closeModal(popup) {
