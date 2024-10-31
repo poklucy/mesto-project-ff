@@ -19,7 +19,6 @@ const titleInput = popupCard.querySelector('.popup__input_type_card-name');
 const linkInput = popupCard.querySelector('.popup__input_type_url');
 const placesList = document.querySelector('.places__list');
 const popups = document.querySelectorAll('.popup');
-const popup = document.querySelector('.popup_type_image');
 const profileAvatarButton = document.querySelector('.profile__avatar-button');
 const popupAvatarEdit = document.querySelector('.popup_type_avatar_edit');
 const popupCloseButton = popupAvatarEdit.querySelector('.popup__close');
@@ -35,7 +34,8 @@ const validationConfig = {
 
 // Функция для открытия попапа с изображением
 let imagePopup;
- function openImagePopup(title, link) {
+
+function openImagePopup(title, link) {
   if (!imagePopup) {
     imagePopup = document.querySelector('.popup_type_image');
   }
@@ -47,7 +47,7 @@ let imagePopup;
   imageElement.alt = title;
   titleElement.textContent = title;
   
-  imagePopup.classList.add('popup_is-opened');
+  openModal(imagePopup);
 }
 
 // Загрузка данных при загрузке страницы
@@ -159,9 +159,9 @@ async function handleNewCardSubmit(evt) {
 
 
 // Рендеринг карточек
-function renderCards(cards, profileInfo) {
+function renderCards(cards) {
   cards.forEach(card => {
-    const cardElement = createCard(card, profileInfo);
+    const cardElement = createCard(card, openImagePopup);
     placesList.append(cardElement);
   });
 }
