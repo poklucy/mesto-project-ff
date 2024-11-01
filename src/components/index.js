@@ -66,15 +66,10 @@ function setUserId(id) {
 
 const initApp = async () => {
   try {
-    // Получаем данные о пользователе
     const profileInfo = await getProfileInfo();
     userId = profileInfo._id;
-    setUserId(userId);  // Сохраняем userId в localStorage
-
-    // Используем userId при необходимости
+    setUserId(userId); 
     console.log(`Получен userId: ${userId}`);
-
-    // Получаем начальные карточки
     const cards = await getInitialCards();
     renderCards(cards, userId, openImagePopup);
 
@@ -84,10 +79,7 @@ const initApp = async () => {
 };
 
 
-// Запускаем инициализацию приложения
 initApp();
-
-// Проверьте наличие userId
 const fetchedUserId = getUserId();
 
 if (!fetchedUserId) {
@@ -102,7 +94,6 @@ if (!fetchedUserId) {
             console.error('Ошибка при получении данных карточек:', error);
         });
 }
-// Загрузка начальных данных
 async function loadInitialData() {
   try {
     const [userInfo, cards] = await Promise.all([getProfileInfo(), getInitialCards()]);
@@ -111,13 +102,12 @@ async function loadInitialData() {
     profileDescription.textContent = userInfo.about;
     document.querySelector('.profile__image').style.backgroundImage = `url('${userInfo.avatar}')`;
 
-    renderCards(cards, userInfo._id, openImagePopup); // Передаем userId
+    renderCards(cards, userInfo._id, openImagePopup);
   } catch (error) {
     console.error("Ошибка при загрузке данных:", error);
   }
 }
 
-// Настройка обработчиков событий
 function setUpEventListeners() {
   openEditButton.addEventListener('click', () => {
     nameInput.value = profileTitle.textContent;
