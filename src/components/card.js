@@ -13,7 +13,6 @@ function createCard(data, userId, openImagePopup) {
   cardTemplate.querySelector(".card__title").textContent = data.name;
   likeCounter.textContent = data.likes.length;
 
-  // Если текущий пользователь лайкнул карточку, добавляем активный класс
   if (data.likes.some(like => like._id === currentUserId)) {
     likeButton.classList.add("card__like-button_is-active");
   }

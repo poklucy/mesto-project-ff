@@ -67,13 +67,9 @@ function hasInvalidInput(inputList) {
 }
 
 export function clearValidation(formElement) {
-  // Получаем массив всех инпутов внутри данной формы
   const inputs = Array.from(formElement.querySelectorAll('.popup__input'));
-  
-  // Получаем элемент кнопки сабмита внутри формы
   const submitButton = formElement.querySelector('.popup__button');
 
-  // Сбрасываем стили валидации и очищаем текст ошибок для всех инпутов
   inputs.forEach((input) => {
     input.classList.remove('popup__input_type_error');
     
@@ -83,11 +79,8 @@ export function clearValidation(formElement) {
     }
   });
 
-  // Деактивируем кнопку сабмита, добавляя класс и атрибут disabled
   submitButton.classList.add('popup__button_disabled');
   submitButton.setAttribute('disabled', 'true');
-
-  // Актуализируем состояние кнопки сабмита в соответствии с текущими инпутами
   toggleButtonState(inputs, submitButton);
 }
 
