@@ -1,7 +1,7 @@
 import { createCard } from './card.js';
 import { openModal, closeModal } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getInitialCards, getProfileInfo, updateProfileInfo, addNewCard, updateAvatar } from './api.js';
+import { getInitialCards, getProfileInfo, updateProfileInfo, addNewCard, sendAvatarUpdateRequest, serverRequest } from './api.js';
 import '../pages/index.css';
 
 // Определение элементов на странице
@@ -21,7 +21,9 @@ const placesList = document.querySelector('.places__list');
 const popups = document.querySelectorAll('.popup');
 const profileAvatarButton = document.querySelector('.profile__avatar-button');
 const popupAvatarEdit = document.querySelector('.popup_type_avatar_edit');
-const popupCloseButton = popupAvatarEdit.querySelector('.popup__close');
+let  imagePopup = document.querySelector('.popup_type_image');
+const imageElement = imagePopup.querySelector('.popup__image');
+const titleElement = imagePopup.querySelector('.popup__caption');
 
 // Настройки валидации
 const validationConfig = {
@@ -32,16 +34,9 @@ const validationConfig = {
   errorClass: 'popup__error_visible'
 };
 
-// Функция для открытия попапа с изображением
-let imagePopup;
 
 function openImagePopup(title, link) {
-  if (!imagePopup) {
-    imagePopup = document.querySelector('.popup_type_image');
-  }
   
-  const imageElement = imagePopup.querySelector('.popup__image');
-  const titleElement = imagePopup.querySelector('.popup__caption');
   
   imageElement.src = link;
   imageElement.alt = title;
@@ -58,6 +53,55 @@ document.addEventListener('DOMContentLoaded', async () => {
   setUpEventListeners();
 });
 
+
+let userId;
+
+function getUserId() {
+  return localStorage.getItem('userId');
+}
+
+function setUserId(id) {
+  localStorage.setItem('userId', id);
+}
+
+const initApp = async () => {
+  try {
+    // Получаем данные о пользователе
+    const profileInfo = await getProfileInfo();
+    userId = profileInfo._id;
+    setUserId(userId);  // Сохраняем userId в localStorage
+
+    // Используем userId при необходимости
+    console.log(`Получен userId: ${userId}`);
+
+    // Получаем начальные карточки
+    const cards = await getInitialCards();
+    renderCards(cards, userId, openImagePopup);
+
+  } catch (error) {
+    console.error('Ошибка при инициализации приложения:', error);
+  }
+};
+
+
+// Запускаем инициализацию приложения
+initApp();
+
+// Проверьте наличие userId
+const fetchedUserId = getUserId();
+
+if (!fetchedUserId) {
+    initApp();
+} else {
+    userId = fetchedUserId;
+    getInitialCards()
+        .then(cards => {
+            renderCards(cards, userId, openImagePopup);
+        })
+        .catch(error => {
+            console.error('Ошибка при получении данных карточек:', error);
+        });
+}
 // Загрузка начальных данных
 async function loadInitialData() {
   try {
@@ -67,7 +111,7 @@ async function loadInitialData() {
     profileDescription.textContent = userInfo.about;
     document.querySelector('.profile__image').style.backgroundImage = `url('${userInfo.avatar}')`;
 
-    renderCards(cards, userInfo);
+    renderCards(cards, userInfo._id, openImagePopup); // Передаем userId
   } catch (error) {
     console.error("Ошибка при загрузке данных:", error);
   }
@@ -82,6 +126,8 @@ function setUpEventListeners() {
   });
 
   openNewCardButton.addEventListener('click', () => {
+    const formElement = popupCard.querySelector('.popup__form');
+    clearValidation(formElement);
     openModal(popupCard);
   });
 
@@ -90,11 +136,9 @@ function setUpEventListeners() {
   popups.forEach(popup => setupPopupClose(popup));
 
   profileAvatarButton.addEventListener('click', () => {
-    openModal(popupAvatarEdit);
-  });
-
-  popupCloseButton.addEventListener('click', () => {
-    closeModal(popupAvatarEdit);
+    const formElement = profileAvatarButton.querySelector('.popup__form');
+    clearValidation(formElement);
+    openModal(profileAvatarButton);
   });
 
   const avatarForm = document.querySelector('.popup__form[name="edit-avatar"]');
@@ -104,9 +148,10 @@ function setUpEventListeners() {
 // Обработчик отправки формы обновления аватара
 async function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
-  const submitButton = evt.target.querySelector('.popup__button');
+
+  const submitButton = evt.submitter;
   const initialText = submitButton.textContent;
-  submitButton.textContent = 'Сохранение...'; 
+  submitButton.textContent = 'Сохранение...';
 
   try {
     const newAvatarUrl = document.getElementById('profile-avatar').value; 
@@ -115,9 +160,10 @@ async function handleAvatarFormSubmit(evt) {
   } catch (error) {
     console.error("Ошибка при обновлении аватара:", error);
   } finally {
-    submitButton.textContent = initialText; 
+    submitButton.textContent = initialText;
   }
 }
+
 // Обработчик отправки формы профиля
 async function handleProfileFormSubmit(evt) {
   evt.preventDefault();
@@ -146,7 +192,7 @@ async function handleNewCardSubmit(evt) {
 
   try {
     const newCard = await addNewCard(titleInput.value, linkInput.value);
-    const newCardElement = createCard(newCard, openImagePopup);
+    const newCardElement = createCard(newCard, userId, openImagePopup);
     placesList.prepend(newCardElement);
     closeModal(popupCard);
     formNewCard.reset();
@@ -157,11 +203,20 @@ async function handleNewCardSubmit(evt) {
   }
 }
 
+const updateAvatar = async (newAvatarUrl) => {
+  try {
+    const result = await sendAvatarUpdateRequest(newAvatarUrl);
+    console.log('Аватар успешно обновлён!', result);
+    document.querySelector('.profile__image').style.backgroundImage = `url('${newAvatarUrl}')`;
+  } catch (error) {
+    console.error('Ошибка при обновлении аватара:', error);
+  }
+};
 
 // Рендеринг карточек
 function renderCards(cards) {
   cards.forEach(card => {
-    const cardElement = createCard(card, openImagePopup);
+    const cardElement = createCard(card,userId, openImagePopup);
     placesList.append(cardElement);
   });
 }

@@ -1,7 +1,7 @@
 import { addLike, removeLike,  deleteCardApi } from './api.js';
 
-function createCard(data, openImagePopup) {
-  const currentUserId = 'df247d8437c1f35fdc60902c'; 
+function createCard(data, userId, openImagePopup) {
+  const currentUserId = userId; 
   const cardTemplate = document.getElementById("card-template").content.cloneNode(true).querySelector(".card");
   const deleteButton = cardTemplate.querySelector(".card__delete-button");
   const likeButton = cardTemplate.querySelector(".card__like-button");
@@ -13,13 +13,14 @@ function createCard(data, openImagePopup) {
   cardTemplate.querySelector(".card__title").textContent = data.name;
   likeCounter.textContent = data.likes.length;
 
+  // Если текущий пользователь лайкнул карточку, добавляем активный класс
+  if (data.likes.some(like => like._id === currentUserId)) {
+    likeButton.classList.add("card__like-button_is-active");
+  }
+
   likeButton.addEventListener("click", () => {
     handleLikeClick(data._id, likeButton, likeCounter);
   });
-
-  if (data.liked) {
-    likeButton.classList.add("card__like-button_is-active");
-  }
 
   if (data.owner._id !== currentUserId) {
     deleteButton.remove();
@@ -54,8 +55,6 @@ function handleLikeClick(cardId, likeButton, likeCounter) {
 }
 
 function deleteCard(cardId, cardElement) {
-  const deleteButton = cardElement.querySelector('.card__delete-button');
-  deleteButton.addEventListener('click', () => handleDeleteButtonClick(data._id, cardElement));
   deleteCardApi(cardId) 
     .then(() => {
       cardElement.remove(); 

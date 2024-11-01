@@ -66,20 +66,11 @@ export const deleteCardApi = (cardId) => {
   }).then(handleResponse);
 };
 
-export const updateAvatar = async (newAvatarUrl) => {
-  try {
-    const response = await fetch(`${url}/users/me/avatar`, {
-      method: 'PATCH',
-      headers: config.headers,
-      body: JSON.stringify({ avatar: newAvatarUrl })
-    });
-
-    const result = await handleResponse(response);
-    console.log('Аватар успешно обновлён!', result);
-
-   
-    document.querySelector('.profile__image').style.backgroundImage = `url('${newAvatarUrl}')`;
-  } catch (error) {
-    console.error('Ошибка при обновлении аватара:', error);
-  }
+export const sendAvatarUpdateRequest = async (newAvatarUrl) => {
+  const response = await fetch(`${url}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({ avatar: newAvatarUrl })
+  });
+  return await handleResponse(response);
 };
